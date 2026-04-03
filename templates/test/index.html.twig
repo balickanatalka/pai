@@ -1,12 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Test{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block body %}
-    <h1>Działa Symfony + Twig 🚀</h1>
-    <p>To jest Twoja pierwsza templatka</p>
+    <div class="card shadow-sm p-4">
 
-    Jestem {{ name }}!
+        <h1 class="mb-3">Działa Symfony + Twig </h1>
+
+        <p class="lead">To jest Twoja pierwsza templatka</p>
+
+        <p><strong>Jestem {{ name }}!</strong></p>
+
+        <hr>
+
+        <a href="/products" class="btn btn-primary">
+            Przejdź do produktów
+        </a>
+
+    </div>
 {% endblock %}
-
-{% block footer %}Stopka{% endblock %}
