@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Roles{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Lista ról</h1>
+
+            <a href="{{ path('app_role_new') }}" class="btn btn-success">
+                + Dodaj rolę
+            </a>
+        </div>
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>System</th>
+                <th class="text-end">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for role in roles %}
+                <tr>
+                    <td>{{ role.id }}</td>
+
+                    <td>
+                        <span class="badge bg-primary">
+                            {{ role.code }}
+                        </span>
+                    </td>
+
+                    <td>{{ role.name }}</td>
+
+                    <td>{{ role.description ?: '-' }}</td>
+
+                    <td>
+                        {% if role.isSystem %}
+                            <span class="badge bg-danger">SYSTEM</span>
+                        {% else %}
+                            <span class="badge bg-secondary">CUSTOM</span>
+                        {% endif %}
+                    </td>
+
+                    <td class="text-end">
+                        <a href="{{ path('app_role_show', {id: role.id}) }}"
+                           class="btn btn-sm btn-info">
+                            Show
+                        </a>
+
+                        <a href="{{ path('app_role_edit', {id: role.id}) }}"
+                           class="btn btn-sm btn-warning">
+                            Edit
+                        </a>
+
+                        {% if not role.isSystem %}
+                            <form method="post"
+                                  action="{{ path('app_role_delete', {id: role.id}) }}"
+                                  style="display:inline-block"
+                                  onsubmit="return confirm('Czy na pewno usunąć rolę?');">
+                                <input type="hidden"
+                                       name="_token"
+                                       value="{{ csrf_token('delete_role_' ~ role.id) }}">
+                                <button class="btn btn-sm btn-danger">
+                                    Delete
+                                </button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">
+                        Brak ról w systemie
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}

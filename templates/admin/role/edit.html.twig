@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit role{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm p-4">
+        <h1 class="mb-4">Edytuj rolę</h1>
+
+        {{ include('admin/role/_form.html.twig') }}
+
+        <a href="{{ path('app_role_index') }}" class="btn btn-secondary mt-3">
+            Back to list
+        </a>
+    </div>
+{% endblock %}
