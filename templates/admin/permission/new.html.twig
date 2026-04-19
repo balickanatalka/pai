@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New permission{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm p-4">
+        <h1 class="mb-4">Create permission</h1>
+
+        {{ include('admin/permission/_form.html.twig') }}
+
+        <a href="{{ path('app_permission_index') }}" class="btn btn-secondary mt-3">Back to list</a>
+    </div>
+{% endblock %}
