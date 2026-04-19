@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User details{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm p-4">
+        <h1 class="mb-4">Szczegóły użytkownika</h1>
+
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <th>ID</th>
+                <td>{{ user.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Active</th>
+                <td>
+                    {% if user.isActive %}
+                        <span class="badge bg-success">YES</span>
+                    {% else %}
+                        <span class="badge bg-danger">NO</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>
+                    {% if user.userRoles|length > 0 %}
+                        {% for role in user.userRoles %}
+                            <span class="badge bg-primary">{{ role.code }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="text-muted">No roles assigned</span>
+                    {% endif %}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_user_index') }}" class="btn btn-secondary">
+                Back to list
+            </a>
+
+            <a href="{{ path('app_user_edit', {id: user.id}) }}" class="btn btn-warning">
+                Edit
+            </a>
+        </div>
+    </div>
+{% endblock %}

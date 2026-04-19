@@ -1,0 +1,21 @@
+{{ form_start(form) }}
+
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.email) }}
+        {{ form_row(form.plainPassword) }}
+        {{ form_row(form.isActive) }}
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Roles</label>
+
+        <div class="border rounded p-3" style="max-height: 350px; overflow-y: auto;">
+            {{ form_widget(form.userRoles) }}
+        </div>
+    </div>
+</div>
+
+<button class="btn btn-primary mt-3">Save</button>
+
+{{ form_end(form) }}
