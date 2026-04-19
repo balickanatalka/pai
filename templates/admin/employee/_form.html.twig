@@ -1,0 +1,21 @@
+{{ form_start(form) }}
+
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.firstName) }}
+        {{ form_row(form.lastName) }}
+        {{ form_row(form.employeeNumber) }}
+        {{ form_row(form.department) }}
+        {{ form_row(form.position) }}
+    </div>
+
+    <div class="col-md-6">
+        {{ form_row(form.hiredAt) }}
+        {{ form_row(form.isActive) }}
+        {{ form_row(form.appUser) }}
+    </div>
+</div>
+
+<button class="btn btn-primary mt-3">Save</button>
+
+{{ form_end(form) }}

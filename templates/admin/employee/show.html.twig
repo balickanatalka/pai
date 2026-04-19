@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Employee details{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm p-4">
+        <h1 class="mb-4">Szczegóły pracownika</h1>
+
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <th>ID</th>
+                <td>{{ employee.id }}</td>
+            </tr>
+            <tr>
+                <th>First name</th>
+                <td>{{ employee.firstName }}</td>
+            </tr>
+            <tr>
+                <th>Last name</th>
+                <td>{{ employee.lastName }}</td>
+            </tr>
+            <tr>
+                <th>Employee number</th>
+                <td>{{ employee.employeeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Department</th>
+                <td>{{ employee.department ?: '-' }}</td>
+            </tr>
+            <tr>
+                <th>Position</th>
+                <td>{{ employee.position ?: '-' }}</td>
+            </tr>
+            <tr>
+                <th>Hired at</th>
+                <td>{{ employee.hiredAt ? employee.hiredAt|date('Y-m-d H:i') : '-' }}</td>
+            </tr>
+            <tr>
+                <th>Active</th>
+                <td>
+                    {% if employee.isActive %}
+                        <span class="badge bg-success">YES</span>
+                    {% else %}
+                        <span class="badge bg-danger">NO</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>User account</th>
+                <td>
+                    {% if employee.appUser %}
+                        <span class="badge bg-primary">{{ employee.appUser.email }}</span>
+                    {% else %}
+                        <span class="text-muted">No account assigned</span>
+                    {% endif %}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_employee_index') }}" class="btn btn-secondary">
+                Back to list
+            </a>
+
+            <a href="{{ path('app_employee_edit', {id: employee.id}) }}" class="btn btn-warning">
+                Edit
+            </a>
+        </div>
+    </div>
+{% endblock %}

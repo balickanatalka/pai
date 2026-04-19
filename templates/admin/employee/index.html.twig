@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Employees{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Lista pracowników</h1>
+
+            <a href="{{ path('app_employee_new') }}" class="btn btn-success">
+                + Dodaj pracownika
+            </a>
+        </div>
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Employee number</th>
+                <th>Department</th>
+                <th>Position</th>
+                <th>User</th>
+                <th>Active</th>
+                <th class="text-end">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.id }}</td>
+                    <td>{{ employee.firstName }}</td>
+                    <td>{{ employee.lastName }}</td>
+                    <td>{{ employee.employeeNumber }}</td>
+                    <td>{{ employee.department ?: '-' }}</td>
+                    <td>{{ employee.position ?: '-' }}</td>
+                    <td>
+                        {% if employee.appUser %}
+                            <span class="badge bg-primary">{{ employee.appUser.email }}</span>
+                        {% else %}
+                            <span class="text-muted">No account</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if employee.isActive %}
+                            <span class="badge bg-success">YES</span>
+                        {% else %}
+                            <span class="badge bg-danger">NO</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ path('app_employee_show', {id: employee.id}) }}" class="btn btn-sm btn-info">
+                            Show
+                        </a>
+
+                        <a href="{{ path('app_employee_edit', {id: employee.id}) }}" class="btn btn-sm btn-warning">
+                            Edit
+                        </a>
+
+                        <form method="post"
+                              action="{{ path('app_employee_delete', {id: employee.id}) }}"
+                              style="display:inline-block"
+                              onsubmit="return confirm('Czy na pewno usunąć pracownika?');">
+                            <input type="hidden"
+                                   name="_token"
+                                   value="{{ csrf_token('delete_employee_' ~ employee.id) }}">
+                            <button class="btn btn-sm btn-danger">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9" class="text-center text-muted">
+                        Brak pracowników w systemie
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}

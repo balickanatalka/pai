@@ -34,6 +34,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserPermission::class, orphanRemoval: true)]
     private Collection $userPermissionOverrides;
 
+    #[ORM\OneToOne(mappedBy: 'appUser', cascade: ['persist', 'remove'])]
+    private ?Employee $employee = null;
+
     public function __construct()
     {
         $this->userRoles = new ArrayCollection();
@@ -150,6 +153,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getEmployee(): ?Employee
+    {
+        return $this->employee;
+    }
+
+    public function setEmployee(?Employee $employee): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($employee === null && $this->employee !== null) {
+            $this->employee->setAppUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($employee !== null && $employee->getAppUser() !== $this) {
+            $employee->setAppUser($this);
+        }
+
+        $this->employee = $employee;
 
         return $this;
     }
