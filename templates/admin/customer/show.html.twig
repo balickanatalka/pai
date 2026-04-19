@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="card p-4">
+        <h1>Customer details</h1>
+
+        <table class="table">
+            <tr><th>ID</th><td>{{ customer.id }}</td></tr>
+            <tr><th>First name</th><td>{{ customer.firstName }}</td></tr>
+            <tr><th>Last name</th><td>{{ customer.lastName }}</td></tr>
+            <tr><th>Email</th><td>{{ customer.email }}</td></tr>
+            <tr><th>Phone</th><td>{{ customer.phoneNumber }}</td></tr>
+        </table>
+
+        <a href="{{ path('app_customer_index') }}" class="btn btn-secondary">Back</a>
+    </div>
+{% endblock %}
