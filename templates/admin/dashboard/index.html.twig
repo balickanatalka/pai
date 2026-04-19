@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Admin panel</h1>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ path('app_permission_index') }}" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h3 class="card-title mb-3">Permissions</h3>
+                            <p class="card-text text-muted mb-0">
+                                System permissions management.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ path('app_role_index') }}" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h3 class="card-title mb-3">Roles</h3>
+                            <p class="card-text text-muted mb-0">
+                                Manage roles and assigned permissions.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ path('app_customer_index') }}" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h3 class="card-title mb-3">Customers</h3>
+                            <p class="card-text text-muted mb-0">
+                                Customer list and customer data management.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ path('app_employee_index') }}" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h3 class="card-title mb-3">Employees</h3>
+                            <p class="card-text text-muted mb-0">
+                                Manage employees and account associations.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

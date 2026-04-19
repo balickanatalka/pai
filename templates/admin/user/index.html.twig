@@ -6,10 +6,10 @@
     <div class="card shadow-sm p-4">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0">Lista użytkowników</h1>
+            <h1 class="mb-0">Users</h1>
 
             <a href="{{ path('app_user_new') }}" class="btn btn-success">
-                + Dodaj użytkownika
+                + Add user
             </a>
         </div>
 
@@ -69,7 +69,7 @@
                         <form method="post"
                               action="{{ path('app_user_delete', {id: user.id}) }}"
                               style="display:inline-block"
-                              onsubmit="return confirm('Czy na pewno usunąć użytkownika?');">
+                              onsubmit="return confirm('Are you sure you want to delete the user?');">
                             <input type="hidden"
                                    name="_token"
                                    value="{{ csrf_token('delete_user_' ~ user.id) }}">
@@ -82,7 +82,7 @@
             {% else %}
                 <tr>
                     <td colspan="5" class="text-center text-muted">
-                        Brak użytkowników w systemie
+                        No users in the system
                     </td>
                 </tr>
             {% endfor %}

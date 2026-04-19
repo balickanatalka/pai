@@ -6,10 +6,10 @@
     <div class="card shadow-sm p-4">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0">Lista uprawnień</h1>
+            <h1 class="mb-0">Permission list</h1>
 
             <a href="{{ path('app_permission_new') }}" class="btn btn-success">
-                + Dodaj permission
+                + Add permission
             </a>
         </div>
 
@@ -65,7 +65,7 @@
                         <form method="post"
                               action="{{ path('app_permission_delete', {id: permission.id}) }}"
                               style="display:inline-block"
-                              onsubmit="return confirm('Czy na pewno usunąć?');">
+                              onsubmit="return confirm('Are you sure to delete?');">
 
                             <input type="hidden"
                                    name="_token"
@@ -82,7 +82,7 @@
             {% else %}
                 <tr>
                     <td colspan="5" class="text-center text-muted">
-                        Brak uprawnień w bazie
+                        No permissions in the database.
                     </td>
                 </tr>
             {% endfor %}

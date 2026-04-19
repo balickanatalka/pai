@@ -6,10 +6,10 @@
     <div class="card shadow-sm p-4">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0">Lista ról</h1>
+            <h1 class="mb-0">Role list</h1>
 
             <a href="{{ path('app_role_new') }}" class="btn btn-success">
-                + Dodaj rolę
+                + Add role
             </a>
         </div>
 
@@ -72,7 +72,7 @@
                             <form method="post"
                                   action="{{ path('app_role_delete', {id: role.id}) }}"
                                   style="display:inline-block"
-                                  onsubmit="return confirm('Czy na pewno usunąć rolę?');">
+                                  onsubmit="return confirm('Are you sure you want to delete the role?');">
                                 <input type="hidden"
                                        name="_token"
                                        value="{{ csrf_token('delete_role_' ~ role.id) }}">
@@ -87,7 +87,7 @@
             {% else %}
                 <tr>
                     <td colspan="6" class="text-center text-muted">
-                        Brak ról w systemie
+                        There are no roles in the system.
                     </td>
                 </tr>
             {% endfor %}
