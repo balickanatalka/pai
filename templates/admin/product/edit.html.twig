@@ -1,0 +1,15 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Edit product{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm p-4">
+        <h1 class="mb-4">Edit product</h1>
+
+        {{ include('admin/product/_form.html.twig') }}
+
+        <a href="{{ path('app_product_index') }}" class="btn btn-secondary mt-3">
+            Back to list
+        </a>
+    </div>
+{% endblock %}

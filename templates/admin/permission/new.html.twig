@@ -1,13 +1,31 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
 {% block title %}New permission{% endblock %}
 
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item">
+                <a href="{{ path('app_admin_dashboard_index') }}">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ path('app_permission_index') }}">Permissions</a>
+            </li>
+            <li class="breadcrumb-item active">Create</li>
+        </ol>
+    </nav>
+{% endblock %}
+
 {% block body %}
     <div class="card shadow-sm p-4">
+
         <h1 class="mb-4">Create permission</h1>
 
         {{ include('admin/permission/_form.html.twig') }}
 
-        <a href="{{ path('app_permission_index') }}" class="btn btn-secondary mt-3">Back to list</a>
+        <a href="{{ path('app_permission_index') }}" class="btn btn-secondary mt-3">
+            Back to list
+        </a>
+
     </div>
 {% endblock %}

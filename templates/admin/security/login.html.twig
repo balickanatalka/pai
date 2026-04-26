@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Login{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="card mx-auto shadow-sm" style="max-width: 400px;">
+            <div class="card-body">
+                <h1 class="h3 mb-4">Admin login</h1>
+
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                <form method="post" action="{{ path('app_admin_login') }}">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <div class="mb-3">
+                        <label for="email">Email</label>
+                        <input
+                            type="email"
+                            value="{{ last_username }}"
+                            name="_username"
+                            id="email"
+                            class="form-control"
+                            required
+                            autofocus
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password">Password</label>
+                        <input
+                            type="password"
+                            name="_password"
+                            id="password"
+                            class="form-control"
+                            required
+                        >
+                    </div>
+
+                    <button class="btn btn-primary w-100" type="submit">
+                        Sign in
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
