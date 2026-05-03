@@ -16,6 +16,31 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    public function searchWithFilters(?string $q, ?string $brand, ?string $category): array
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        if ($q) {
+            $qb->andWhere('LOWER(p.name) LIKE LOWER(:q)')
+                ->setParameter('q', '%' . $q . '%');
+        }
+
+        if ($brand) {
+            $qb->andWhere('p.brand = :brand')
+                ->setParameter('brand', $brand);
+        }
+
+        if ($category) {
+            $qb->andWhere('p.category = :category')
+                ->setParameter('category', $category);
+        }
+
+        return $qb
+            ->orderBy('p.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Product[] Returns an array of Product objects
     //     */

@@ -16,6 +16,16 @@ class BrandRepository extends ServiceEntityRepository
         parent::__construct($registry, Brand::class);
     }
 
+    public function findUsedBrands(): array
+    {
+        return $this->createQueryBuilder('b')
+            ->innerJoin('b.products', 'p')
+            ->groupBy('b.id')
+            ->orderBy('b.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Brand[] Returns an array of Brand objects
     //     */

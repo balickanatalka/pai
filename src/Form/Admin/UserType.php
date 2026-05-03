@@ -31,12 +31,6 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Email',
             ])
-            ->add('firstName', TextType::class, [
-                'label' => 'First name',
-            ])
-            ->add('lastName', TextType::class, [
-                'label' => 'Last name',
-            ])
             ->add('plainPassword', PasswordType::class, [
                 'label' => $isEdit ? 'New password' : 'Password',
                 'mapped' => false,
