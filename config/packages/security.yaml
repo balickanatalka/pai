@@ -69,6 +69,7 @@ security:
         - { path: ^/admin/logout, roles: PUBLIC_ACCESS }
         - { path: ^/shop/login, roles: PUBLIC_ACCESS }
         - { path: ^/shop/logout, roles: PUBLIC_ACCESS }
+        - { path: ^/shop/register, roles: PUBLIC_ACCESS }
 
         # Admin area restricted to admins only
         - { path: ^/admin, roles: ROLE_ADMIN }

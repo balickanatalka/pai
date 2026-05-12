@@ -2,31 +2,51 @@
 
 {% block title %}Account{% endblock %}
 
-{% block breadcrumbs %}
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item">
-                <a href="{{ path('app_shop_dashboard') }}">Home</a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">
-                Account
-            </li>
-        </ol>
-    </nav>
-{% endblock %}
-
 {% block body %}
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h1 class="h4 mb-3">Moje konto</h1>
 
-            {% if app.user %}
-                <p class="mb-1">
-                    <strong>Email:</strong> {{ app.user.email }}
-                </p>
-            {% else %}
-                <p>Nie jesteś zalogowany.</p>
-            {% endif %}
+    <div class="row">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h1 class="h4 mb-4">
+                        Account
+                    </h1>
+
+                    <p class="mb-1">
+                        <strong>Email:</strong>
+                        {{ user.email }}
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Roles:</strong>
+                        {{ user.roles|join(', ') }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 mb-4">
+                        Customer details
+                    </h2>
+
+                    {{ form_start(form) }}
+
+                    {{ form_row(form.firstName) }}
+                    {{ form_row(form.lastName) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.phoneNumber) }}
+
+                    <button class="btn btn-primary">
+                        Save details
+                    </button>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
         </div>
     </div>
+
 {% endblock %}

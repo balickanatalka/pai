@@ -1,0 +1,39 @@
+{% extends 'shop/base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <h1 class="h4 mb-4">
+                        Create account
+                    </h1>
+
+                    {{ form_start(form) }}
+
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.plainPassword) }}
+                    {{ form_row(form.acceptTerms) }}
+
+                    <button class="btn btn-primary">
+                        Register
+                    </button>
+
+                    <a href="{{ path('app_shop_login') }}" class="btn btn-outline-secondary">
+                        Back to login
+                    </a>
+
+                    {{ form_end(form) }}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
