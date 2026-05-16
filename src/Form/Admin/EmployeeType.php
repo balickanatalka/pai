@@ -48,7 +48,7 @@ class EmployeeType extends AbstractType
                 'label' => 'Active',
                 'required' => false,
             ])
-            ->add('appUser', EntityType::class, [
+            ->add('user', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'email',
                 'placeholder' => 'Choose user',

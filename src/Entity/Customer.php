@@ -6,9 +6,12 @@ use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Loggable\Loggable;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-class Customer
+#[Gedmo\Loggable(logEntryClass: LogEntry::class)]
+class Customer implements Loggable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,16 +19,29 @@ class Customer
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
+    #[Gedmo\Versioned]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 30)]
+    #[Gedmo\Versioned]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 180)]
+    #[Gedmo\Versioned]
     private ?string $email = null;
 
     #[ORM\Column(length: 20)]
+    #[Gedmo\Versioned]
     private ?string $phoneNumber = null;
+
+    #[ORM\OneToOne(inversedBy: 'customer', cascade: ['persist'])]
+    #[ORM\JoinColumn(
+        name: 'app_user_id',
+        referencedColumnName: 'id',
+        nullable: true,
+        onDelete: 'SET NULL'
+    )]
+    private ?User $user = null;
 
     /**
      * @var Collection<int, Address>
@@ -64,7 +80,7 @@ class Customer
 
     public function setFirstName(string $firstName): static
     {
-        $this->firstName = $firstName;
+        $this->firstName = trim($firstName);
 
         return $this;
     }
@@ -76,7 +92,7 @@ class Customer
 
     public function setLastName(string $lastName): static
     {
-        $this->lastName = $lastName;
+        $this->lastName = trim($lastName);
 
         return $this;
     }
@@ -88,7 +104,7 @@ class Customer
 
     public function setEmail(string $email): static
     {
-        $this->email = $email;
+        $this->email = strtolower(trim($email));
 
         return $this;
     }
@@ -100,7 +116,23 @@ class Customer
 
     public function setPhoneNumber(string $phoneNumber): static
     {
-        $this->phoneNumber = $phoneNumber;
+        $this->phoneNumber = trim($phoneNumber);
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        if ($user !== null && $user->getCustomer() !== $this) {
+            $user->setCustomer($this);
+        }
 
         return $this;
     }
@@ -126,7 +158,6 @@ class Customer
     public function removeAddress(Address $address): static
     {
         if ($this->addresses->removeElement($address)) {
-            // set the owning side to null (unless already changed)
             if ($address->getCustomer() === $this) {
                 $address->setCustomer(null);
             }
@@ -156,7 +187,6 @@ class Customer
     public function removeCustomerOrder(CustomerOrder $customerOrder): static
     {
         if ($this->customerOrders->removeElement($customerOrder)) {
-            // set the owning side to null (unless already changed)
             if ($customerOrder->getCustomer() === $this) {
                 $customerOrder->setCustomer(null);
             }
@@ -186,7 +216,6 @@ class Customer
     public function removeInvoice(Invoice $invoice): static
     {
         if ($this->invoices->removeElement($invoice)) {
-            // set the owning side to null (unless already changed)
             if ($invoice->getCustomer() === $this) {
                 $invoice->setCustomer(null);
             }

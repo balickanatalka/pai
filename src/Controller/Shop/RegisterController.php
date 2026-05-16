@@ -2,6 +2,7 @@
 
 namespace App\Controller\Shop;
 
+use App\Entity\Customer;
 use App\Entity\User;
 use App\Form\Shop\RegisterType;
 use App\Repository\RoleRepository;
@@ -21,17 +22,21 @@ class RegisterController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly RoleRepository $roleRepository,
+        private readonly MailerInterface $mailer,
     ) {
     }
 
     #[Route('', name: '', methods: ['GET', 'POST'])]
-    public function index(Request $request, MailerInterface $mailer): Response
+    public function index(Request $request): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_shop_dashboard');
         }
 
         $user = new User();
+        $customer = new Customer();
+
+        $user->setCustomer($customer);
 
         $form = $this->createForm(RegisterType::class, $user);
         $form->handleRequest($request);
@@ -61,9 +66,7 @@ class RegisterController extends AbstractController
                 ->subject('Account registration')
                 ->text('Your account has been created successfully.');
 
-
-
-            $mailer->send($email);
+            $this->mailer->send($email);
 
             $this->addFlash('success', 'Your account has been created. Confirmation email has been sent.');
 
@@ -74,4 +77,11 @@ class RegisterController extends AbstractController
             'form' => $form,
         ]);
     }
+
+//    public function confirmation(Request $request, string $confirmationToken): Response
+//    {
+//        // @TODO check token, if exists activate assigned user
+//
+//        return $this->render('shop/register/confirmation.html.twig', [])
+//    }
 }

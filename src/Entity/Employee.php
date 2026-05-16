@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Loggable\Loggable;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
-class Employee
+#[Gedmo\Loggable(logEntryClass: LogEntry::class)]
+class Employee implements Loggable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -14,29 +17,41 @@ class Employee
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
+    #[Gedmo\Versioned]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 30)]
+    #[Gedmo\Versioned]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 30)]
+    #[Gedmo\Versioned]
     private ?string $employeeNumber = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $department = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $position = null;
 
     #[ORM\Column]
+    #[Gedmo\Versioned]
     private ?\DateTimeImmutable $hiredAt = null;
 
     #[ORM\Column]
+    #[Gedmo\Versioned]
     private ?bool $isActive = null;
 
     #[ORM\OneToOne(inversedBy: 'employee', cascade: ['persist'])]
-    #[ORM\JoinColumn(name: 'app_user_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
-    private ?User $appUser = null;
+    #[ORM\JoinColumn(
+        name: 'app_user_id',
+        referencedColumnName: 'id',
+        nullable: true,
+        onDelete: 'SET NULL'
+    )]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -50,7 +65,7 @@ class Employee
 
     public function setFirstName(string $firstName): static
     {
-        $this->firstName = $firstName;
+        $this->firstName = trim($firstName);
 
         return $this;
     }
@@ -62,7 +77,7 @@ class Employee
 
     public function setLastName(string $lastName): static
     {
-        $this->lastName = $lastName;
+        $this->lastName = trim($lastName);
 
         return $this;
     }
@@ -74,7 +89,7 @@ class Employee
 
     public function setEmployeeNumber(string $employeeNumber): static
     {
-        $this->employeeNumber = $employeeNumber;
+        $this->employeeNumber = trim($employeeNumber);
 
         return $this;
     }
@@ -86,7 +101,7 @@ class Employee
 
     public function setDepartment(?string $department): static
     {
-        $this->department = $department;
+        $this->department = $department !== null ? trim($department) : null;
 
         return $this;
     }
@@ -98,7 +113,7 @@ class Employee
 
     public function setPosition(?string $position): static
     {
-        $this->position = $position;
+        $this->position = $position !== null ? trim($position) : null;
 
         return $this;
     }
@@ -127,14 +142,18 @@ class Employee
         return $this;
     }
 
-    public function getAppUser(): ?User
+    public function getUser(): ?User
     {
-        return $this->appUser;
+        return $this->user;
     }
 
-    public function setAppUser(?User $appUser): static
+    public function setUser(?User $user): static
     {
-        $this->appUser = $appUser;
+        $this->user = $user;
+
+        if ($user !== null && $user->getEmployee() !== $this) {
+            $user->setEmployee($this);
+        }
 
         return $this;
     }

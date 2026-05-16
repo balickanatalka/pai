@@ -17,7 +17,7 @@ class RegisterType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'label' => 'Email address',
+                'label' => 'Login email address',
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -29,6 +29,9 @@ class RegisterType extends AbstractType
                 'second_options' => [
                     'label' => 'Repeat password',
                 ],
+            ])
+            ->add('customer', CustomerProfileType::class, [
+                'label' => false,
             ])
             ->add('acceptTerms', CheckboxType::class, [
                 'label' => 'I accept the terms and conditions',

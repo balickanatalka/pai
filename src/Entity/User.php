@@ -6,12 +6,15 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Loggable\Loggable;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'app_user')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[Gedmo\Loggable(logEntryClass: LogEntry::class)]
+class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,12 +22,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Gedmo\Versioned]
     private string $email;
 
     #[ORM\Column]
+    #[Gedmo\Versioned]
     private string $password;
 
     #[ORM\Column(options: ['default' => true])]
+    #[Gedmo\Versioned]
     private bool $isActive = true;
 
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users')]
@@ -34,8 +40,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserPermission::class, orphanRemoval: true)]
     private Collection $userPermissionOverrides;
 
-    #[ORM\OneToOne(mappedBy: 'appUser', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Employee $employee = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Customer $customer = null;
 
     public function __construct()
     {
@@ -164,17 +173,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setEmployee(?Employee $employee): static
     {
-        // unset the owning side of the relation if necessary
         if ($employee === null && $this->employee !== null) {
-            $this->employee->setAppUser(null);
+            $this->employee->setUser(null);
         }
 
-        // set the owning side of the relation if necessary
-        if ($employee !== null && $employee->getAppUser() !== $this) {
-            $employee->setAppUser($this);
+        if ($employee !== null && $employee->getUser() !== $this) {
+            $employee->setUser($this);
         }
 
         $this->employee = $employee;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): static
+    {
+        if ($customer === null && $this->customer !== null) {
+            $this->customer->setUser(null);
+        }
+
+        if ($customer !== null && $customer->getUser() !== $this) {
+            $customer->setUser($this);
+        }
+
+        $this->customer = $customer;
 
         return $this;
     }

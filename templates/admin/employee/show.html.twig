@@ -4,7 +4,9 @@
 
 {% block body %}
     <div class="card shadow-sm p-4">
-        <h1 class="mb-4">Szczegóły pracownika</h1>
+        <h1 class="mb-4">
+            Employee details
+        </h1>
 
         <table class="table table-bordered">
             <tbody>
@@ -49,10 +51,14 @@
             <tr>
                 <th>User account</th>
                 <td>
-                    {% if employee.appUser %}
-                        <span class="badge bg-primary">{{ employee.appUser.email }}</span>
+                    {% if employee.user %}
+                        <span class="badge bg-primary">
+                            {{ employee.user.email }}
+                        </span>
                     {% else %}
-                        <span class="text-muted">No account assigned</span>
+                        <span class="text-muted">
+                            No account assigned
+                        </span>
                     {% endif %}
                 </td>
             </tr>

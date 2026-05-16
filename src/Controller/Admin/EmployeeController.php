@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Employee;
+use App\Entity\User;
 use App\Form\Admin\EmployeeType;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,6 +40,10 @@ class EmployeeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($employee->getUser() instanceof User) {
+                $employee->getUser()->setEmployee($employee);
+            }
+
             $this->entityManager->persist($employee);
             $this->entityManager->flush();
 
@@ -68,6 +73,10 @@ class EmployeeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($employee->getUser() instanceof User) {
+                $employee->getUser()->setEmployee($employee);
+            }
+
             $this->entityManager->flush();
 
             $this->addFlash('success', 'Employee has been updated.');

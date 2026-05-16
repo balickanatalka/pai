@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\AddressRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Loggable\Loggable;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: AddressRepository::class)]
-class Address
+#[Gedmo\Loggable(logEntryClass: LogEntry::class)]
+class Address implements Loggable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -14,15 +17,19 @@ class Address
     private ?int $id = null;
 
     #[ORM\Column(length: 120)]
+    #[Gedmo\Versioned]
     private ?string $street = null;
 
     #[ORM\Column(length: 50)]
+    #[Gedmo\Versioned]
     private ?string $city = null;
 
     #[ORM\Column(length: 20)]
+    #[Gedmo\Versioned]
     private ?string $postalCode = null;
 
     #[ORM\Column(length: 40)]
+    #[Gedmo\Versioned]
     private ?string $country = null;
 
     #[ORM\ManyToOne(inversedBy: 'addresses')]
@@ -41,7 +48,7 @@ class Address
 
     public function setStreet(string $street): static
     {
-        $this->street = $street;
+        $this->street = trim($street);
 
         return $this;
     }
@@ -53,7 +60,7 @@ class Address
 
     public function setCity(string $city): static
     {
-        $this->city = $city;
+        $this->city = trim($city);
 
         return $this;
     }
@@ -65,7 +72,7 @@ class Address
 
     public function setPostalCode(string $postalCode): static
     {
-        $this->postalCode = $postalCode;
+        $this->postalCode = trim($postalCode);
 
         return $this;
     }
@@ -77,7 +84,7 @@ class Address
 
     public function setCountry(string $country): static
     {
-        $this->country = $country;
+        $this->country = trim($country);
 
         return $this;
     }

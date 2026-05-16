@@ -5,7 +5,6 @@ namespace App\Controller\Shop;
 use App\Entity\Customer;
 use App\Entity\User;
 use App\Form\Shop\CustomerProfileType;
-use App\Repository\CustomerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +15,6 @@ use Symfony\Component\Routing\Attribute\Route;
 class AccountController extends AbstractController
 {
     public function __construct(
-        private readonly CustomerRepository $customerRepository,
         private readonly EntityManagerInterface $entityManager,
     ) {
     }
@@ -31,12 +29,11 @@ class AccountController extends AbstractController
             return $this->redirectToRoute('app_shop_login');
         }
 
-        $customer = $this->customerRepository->findOneBy([
-            'email' => $user->getEmail(),
-        ]);
+        $customer = $user->getCustomer();
 
-        if (!$customer) {
+        if (!$customer instanceof Customer) {
             $customer = new Customer();
+            $customer->setUser($user);
             $customer->setEmail($user->getEmail());
         }
 
@@ -47,7 +44,7 @@ class AccountController extends AbstractController
             $this->entityManager->persist($customer);
             $this->entityManager->flush();
 
-            $this->addFlash('success', 'Account details have been saved.');
+            $this->addFlash('success', 'Customer details have been saved.');
 
             return $this->redirectToRoute('app_shop_account_index');
         }

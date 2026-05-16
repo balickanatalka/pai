@@ -22,7 +22,7 @@ class CustomerProfileType extends AbstractType
                 'label' => 'Last name',
             ])
             ->add('email', EmailType::class, [
-                'label' => 'Email address',
+                'label' => 'Contact email address',
             ])
             ->add('phoneNumber', TelType::class, [
                 'label' => 'Phone number',

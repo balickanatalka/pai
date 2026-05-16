@@ -8,52 +8,101 @@ services:
     environment:
       SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
       DEFAULT_URI: https://${SERVER_NAME:-localhost}:${HTTPS_PORT:-443}
+
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-16}&charset=${POSTGRES_CHARSET:-utf8}
-      MAILER_DSN: smtp://mailer:1025
+
+      MESSENGER_TRANSPORT_DSN: doctrine://default
+
+      # DEV -> Mailpit
+      # PROD -> prawdziwy SMTP z .env.prod.local lub env serwera
+      MAILER_DSN: ${MAILER_DSN:-smtp://mailer:1025}
+
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://php/.well-known/mercure}
       MERCURE_PUBLIC_URL: ${CADDY_MERCURE_PUBLIC_URL:-https://${SERVER_NAME:-localhost}:${HTTPS_PORT:-443}/.well-known/mercure}
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+
     volumes:
       - caddy_data:/data
       - caddy_config:/config
+
     ports:
       - name: http
         target: 80
         published: ${HTTP_PORT:-80}
         protocol: tcp
+
       - name: https
         target: 443
         published: ${HTTPS_PORT:-443}
         protocol: tcp
+
       - name: http3
         target: 443
         published: ${HTTP3_PORT:-443}
         protocol: udp
 
+  worker:
+    build:
+      context: .
+      target: frankenphp_dev
+
+    restart: unless-stopped
+
+    environment:
+      SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
+      DEFAULT_URI: https://${SERVER_NAME:-localhost}:${HTTPS_PORT:-443}
+
+      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-16}&charset=${POSTGRES_CHARSET:-utf8}
+
+      MESSENGER_TRANSPORT_DSN: doctrine://default
+
+      # musi być identyczny jak w php
+      MAILER_DSN: ${MAILER_DSN:-smtp://mailer:1025}
+
+    command: php bin/console messenger:consume async -vv --time-limit=3600
+
+    depends_on:
+      database:
+        condition: service_healthy
+
+      mailer:
+        condition: service_started
+
+    volumes:
+      - ./:/app
+
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
+
+    restart: unless-stopped
+
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-app}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
       POSTGRES_USER: ${POSTGRES_USER:-app}
+
     healthcheck:
       test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
       timeout: 5s
       retries: 5
       start_period: 60s
+
     volumes:
       - database_data:/var/lib/postgresql/data:rw
+
     ports:
       - "5432:5432"
 
   mailer:
     image: axllent/mailpit
     restart: unless-stopped
+
     ports:
-      - "1025"
-      - "8025"
+      - "1025:1025"
+      - "8025:8025"
 
 volumes:
   caddy_data:
